@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="description" content="Accessible Budget Tracker App">
+    <meta name="keywords" content="Budget, Finance, Expense Tracker, Chatbot">
+    <meta name="author" content="Your Name">
+    <title>Budget App with AI Chatbot</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script type="module">
+        import { auth } from "./firebase.js";
+        import { onAuthStateChanged } from "firebase/auth";
+    
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                console.log("🚫 No user logged in. Redirecting to login...");
+                window.location.replace("login.html"); 
+            }
+        });
+    </script>
+    
+    
+    
+    <div class="wrapper">
+        <header>
+            <h1>Accessible Budget Tracker</h1>
+        </header>
+
+        <main class="container">
+            <!-- Budget & Expenses Input Section -->
+            <section class="input-section">
+                <div class="input-group">
+                    <h3>Set Budget</h3>
+                    <p class="error hide" id="budget-error" role="alert">Value cannot be empty or negative</p>
+                    <label for="total-amount">Enter Total Budget:</label>
+                    <input type="number" id="total-amount" placeholder="Enter Total Amount" aria-describedby="budget-error">
+                    <button class="submit" id="total-amount-button" aria-label="Set Budget">Set Budget</button>
+                    <p> <br></p>
+                    <button class="submit reset-button" id="reset-budget-button" aria-label="Reset Budget">Reset Budget</button> 
+                </div>
+
+                <div class="input-group">
+                    <h3>Add Expense</h3>
+                    <p class="error hide" id="product-title-error" role="alert">Values cannot be empty</p>
+                    <label for="product-title">Expense Title:</label>
+                    <input type="text" id="product-title" placeholder="Enter Title" aria-describedby="product-title-error">
+                    
+                    <label for="user-amount">Expense Amount:</label>
+                    <input type="number" id="user-amount" placeholder="Enter Cost" aria-describedby="product-title-error">
+                    
+                    <button class="submit" id="check-amount" aria-label="Add Expense">Add Expense</button>
+                </div>
+            </section>
+
+            <!-- Budget Summary -->
+            <section class="output-container">
+                <h3>Budget Summary</h3>
+                <div class="summary-container">
+                    <div class="summary-item">
+                        <p>Total Budget</p>
+                        <span id="amount" aria-live="polite">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <p>Expenses</p>
+                        <span id="expenditure-value" aria-live="polite">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <p>Balance</p>
+                        <span id="balance-amount" aria-live="polite">0</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expense List -->
+            <section class="expense-section">
+                <h3>Expense List</h3>
+                <div class="list-container" id="list"></div>
+            </section>
+
+            <!-- Chatbot Section Below Expense List -->
+            <section id="chatbot-container">
+                <h3>💬 AI Chat Assistant</h3>
+                <div id="chat-history"></div>
+                <div id="chat-input-container">
+                    <input type="text" id="chatbot-input" placeholder="Ask me something..." />
+                    <button id="chatbot-send-btn">Send</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+    <button id="sign-out-btn">Sign Out</button>
+
+
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="script.js"></script>
+    <script type="module" src="chatbot.js"></script> 
+
+
+    
+</body>
+</html>

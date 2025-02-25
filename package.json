@@ -1,0 +1,20 @@
+{
+  "name": "buget-planner",
+  "version": "1.0.0",
+  "main": "firebase.js",
+  "scripts": {
+    "dev": "vite",
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@google/generative-ai": "^0.22.0",
+    "express": "^4.21.2",
+    "firebase": "^11.3.1",
+    "vite": "^6.1.1"
+  }
+}

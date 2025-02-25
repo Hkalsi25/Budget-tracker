@@ -1,0 +1,7 @@
+.vercel
+# Ignore Node.js modules
+node_modules/
+.env
+.vercel/
+.next/
+dist/
