@@ -29,9 +29,7 @@
             }
         });
     </script>
-    
-    
-    
+
     <div class="wrapper">
         <header>
             <h1>Accessible Budget Tracker</h1>
@@ -88,7 +86,7 @@
                 <div class="list-container" id="list"></div>
             </section>
 
-            <!-- Chatbot Section Below Expense List -->
+            <!-- Chatbot Section -->
             <section id="chatbot-container">
                 <h3>💬 AI Chat Assistant</h3>
                 <div id="chat-history"></div>
@@ -97,17 +95,16 @@
                     <button id="chatbot-send-btn">Send</button>
                 </div>
             </section>
-
         </main>
     </div>
-    <button id="sign-out-btn">Sign Out</button>
 
+    <!-- Sign Out Button Positioned Below Content -->
+    <div class="signout-container">
+        <button id="sign-out-btn" class="signout-button" aria-label="Sign Out">Sign Out</button>
+    </div>
 
     <script type="module" src="firebase.js"></script>
     <script type="module" src="script.js"></script>
     <script type="module" src="chatbot.js"></script> 
-
-
-    
 </body>
 </html>

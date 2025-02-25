@@ -6,7 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 onAuthStateChanged(auth, (user) => {
     if (user) {
         console.log("✅ User authenticated:", user.email);
-        loadExpenses(); // Ensure data loads only after authentication
+        loadExpenses();
     } else {
         console.log("🚫 No user logged in. Redirecting to login...");
         window.location.replace("login.html");
@@ -16,19 +16,12 @@ onAuthStateChanged(auth, (user) => {
 // ✅ Logout Functionality
 document.getElementById("sign-out-btn").addEventListener("click", async () => {
     await signOutUser();
-    window.location.replace("login.html"); // Redirect to login page after logout
+    window.location.replace("login.html");
 });
 
 // ✅ Helper Functions to Get Firestore References
-const getBudgetRef = () => {
-    const user = auth.currentUser;
-    return user ? doc(db, "budget", user.uid) : null;
-};
-
-const getExpensesCollection = () => {
-    const user = auth.currentUser;
-    return user ? collection(db, "expenses", user.uid, "userExpenses") : null;
-};
+const getBudgetRef = () => auth.currentUser ? doc(db, "budget", auth.currentUser.uid) : null;
+const getExpensesCollection = () => auth.currentUser ? collection(db, "expenses", auth.currentUser.uid, "userExpenses") : null;
 
 // Selecting Elements
 const totalAmountInput = document.getElementById("total-amount");
@@ -47,7 +40,7 @@ const expenseList = document.getElementById("list");
 
 let totalBudget = 0;
 let totalExpenses = 0;
-let editingExpenseId = null; // Stores the ID of the expense being edited
+let editingExpenseId = null; // Store the ID of the expense being edited
 
 // ✅ Function to Update Budget Summary in UI
 function updateUI() {
@@ -98,12 +91,10 @@ resetBudgetButton.addEventListener("click", async () => {
         if (!expensesCollection) return;
 
         const querySnapshot = await getDocs(expensesCollection);
-
         querySnapshot.forEach(async (expenseDoc) => {
             await deleteDoc(expenseDoc.ref);
         });
 
-        // ✅ Update UI
         totalBudget = 0;
         totalExpenses = 0;
         updateUI();
@@ -115,7 +106,7 @@ resetBudgetButton.addEventListener("click", async () => {
     }
 });
 
-// ✅ Function to Handle Adding an Expense
+// ✅ Function to Handle Adding/Updating an Expense
 async function handleExpense() {
     let title = expenseTitleInput.value.trim();
     let amount = parseFloat(expenseAmountInput.value);
@@ -132,10 +123,35 @@ async function handleExpense() {
         const expensesCollection = getExpensesCollection();
         if (!expensesCollection) return;
 
-        const docRef = await addDoc(expensesCollection, { title, amount });
+        if (editingExpenseId) {
+            // ✅ Update Existing Expense
+            const expenseDocRef = doc(db, "expenses", auth.currentUser.uid, "userExpenses", editingExpenseId);
+            const oldExpenseSnapshot = await getDoc(expenseDocRef);
 
-        displayExpense(title, amount, docRef.id);
-        totalExpenses += amount;
+            if (oldExpenseSnapshot.exists()) {
+                const oldExpenseAmount = oldExpenseSnapshot.data().amount;
+                totalExpenses -= oldExpenseAmount; // Remove old expense amount before updating
+            }
+
+            await updateDoc(expenseDocRef, { title, amount });
+
+            // ✅ Update UI
+            const expenseItem = document.querySelector(`[data-id="${editingExpenseId}"]`);
+            if (expenseItem) {
+                expenseItem.querySelector(".product").innerText = title;
+                expenseItem.querySelector(".amount").innerText = amount.toFixed(2);
+            }
+
+            totalExpenses += amount;
+            editingExpenseId = null;
+            addExpenseButton.textContent = "Add Expense";
+        } else {
+            // ✅ Add New Expense
+            const docRef = await addDoc(expensesCollection, { title, amount });
+
+            displayExpense(title, amount, docRef.id);
+            totalExpenses += amount;
+        }
 
         updateUI();
     } catch (error) {
@@ -158,7 +174,16 @@ function displayExpense(title, amount, id) {
     expenseItem.innerHTML = `
         <p class="product">${title}</p>
         <p class="amount">${amount.toFixed(2)}</p>
-        <button class="delete">❌</button>`;
+        <button class="edit">✏️ Edit</button>
+        <button class="delete">❌ Delete</button>`;
+
+    // ✅ Edit Expense
+    expenseItem.querySelector(".edit").addEventListener("click", () => {
+        expenseTitleInput.value = title;
+        expenseAmountInput.value = amount;
+        editingExpenseId = id;
+        addExpenseButton.textContent = "Update Expense";
+    });
 
     // ✅ Delete Expense
     expenseItem.querySelector(".delete").addEventListener("click", async () => {

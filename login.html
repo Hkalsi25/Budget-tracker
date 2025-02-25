@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Budget App</title>
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
     
@@ -15,15 +15,15 @@
     <div class="login-container">
         <h2>🔐 Login to Budget Tracker</h2>
         
-        <p id="auth-status">Please log in</p>
+        <p id="auth-status" aria-live="polite">Please log in</p>
         
-        <input type="email" id="auth-email" placeholder="Enter email" required />
-        <input type="password" id="auth-password" placeholder="Enter password" required />
+        <label for="auth-email">Email Address:</label>
+        <input type="email" id="auth-email" placeholder="Enter email" required aria-label="Enter Email">
         
-        <button id="sign-in-btn">Sign In</button>
-        <button id="sign-up-btn">Sign Up</button>
-        <button id="google-signin-btn">Sign In with Google</button>
-
+        <label for="auth-password">Password:</label>
+        <input type="password" id="auth-password" placeholder="Enter password" required aria-label="Enter Password">
+        
+        <button id="google-signin-btn" class="submit" aria-label="Sign in with Google">Sign In with Google</button>
     </div>
 
     <script type="module" src="login.js"></script>

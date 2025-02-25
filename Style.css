@@ -218,6 +218,27 @@ button.submit:hover {
   border-radius: 8px;
   font-size: 0.95rem;
 }
+/* Sign Out Button */
+.signout-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.signout-button {
+  padding: 12px 20px;
+  background: #e74c3c;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.signout-button:hover {
+  background: #c0392b;
+}
 
 /* Chat Messages */
 .history {
